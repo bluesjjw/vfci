@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+message encrypted {
+  //the following values correspond to
+  // - protobuf data type
+  // - name
+  // - numeric tag corresponding to the ordering in which the fields are serialized
+  int32 round =1;
+  int32 client_rank = 2;
+  bytes msg = 3;
+}
+
+message gradenc {
+  int32 client_rank = 1;
+  bytes msg = 2;
+}
+
+message sendgradflag{
+    int32 flag = 1;
+}
+
+message sendgrad{
+    int32 client_rank=1;
+    int32 round=2;
+
+}
+
+service SafeTransmission {
+  rpc MiddleForward (encrypted) returns (encrypted);
+  rpc MiddleBackward (gradenc) returns (sendgradflag);
+  rpc BottomBackward (sendgrad) returns (encrypted);
+}
